@@ -1,3 +1,5 @@
+import sum from './styles/scripts/sum'
+
 import './styles/style.css'
 
-console.log('Yeka popilin aqui te pongo los codigos wenos')
+sum()
