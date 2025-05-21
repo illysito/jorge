@@ -2,6 +2,7 @@ import Add from './styles/scripts/math/Add'
 import Multiply from './styles/scripts/math/Multiply'
 import Heart from './styles/scripts/ui/Hearts'
 import Menu from './styles/scripts/ui/Menu'
+import Stats from './styles/scripts/ui/Stats'
 // import sum from './styles/scripts/sum'
 
 import './styles/style.css'
@@ -24,8 +25,11 @@ let menuElements = {
   menu: document.querySelector('.menu'),
   modeButtons: document.querySelectorAll('.game_button'),
 }
-// const stats = document.querySelectorAll('.stats-text')
-// const hearts = document.querySelectorAll('.heart')
+
+let statsElements = {
+  stats: document.querySelectorAll('.stats-text'),
+  stats_section: document.querySelector('.stats-overlay'),
+}
 
 // sum()
 
@@ -46,6 +50,7 @@ let product = new Multiply(
   gameElements.feedbackP
 )
 let hearts = new Heart(heartElements.hearts)
+let stats = new Stats(statsElements.stats, statsElements.stats_section)
 
 // global variables
 let gameFlags = {
@@ -54,6 +59,9 @@ let gameFlags = {
 }
 let failCount = 0
 let previousFailCount = 0
+let attemptCount = 0
+let successCount = 0
+let grade = 0
 
 // global functions
 function checkFails() {
@@ -61,6 +69,10 @@ function checkFails() {
     hearts.animate()
   }
   previousFailCount = failCount
+  console.log(failCount)
+  if (failCount == 5) {
+    stats.viewStats()
+  }
 }
 
 // event listeners
@@ -70,14 +82,22 @@ window.addEventListener('keydown', (e) => {
     // IF SUM
     if (gameFlags.sum) {
       sum.onEnter()
+      attemptCount = sum.getPerformance().attempts
+      successCount = sum.getPerformance().success
       failCount = sum.getPerformance().fails
+      grade = sum.getPerformance().grade
+      stats.printStats(attemptCount, successCount, failCount, grade)
       checkFails()
     }
 
     // IF PRODUCT
     if (gameFlags.product) {
       product.onEnter()
+      attemptCount = product.getPerformance().attempts
+      successCount = product.getPerformance().success
       failCount = product.getPerformance().fails
+      grade = product.getPerformance().grade
+      stats.printStats(attemptCount, successCount, failCount, grade)
       checkFails()
     }
   }
